@@ -3,12 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import MugScene from './Mug.jsx'
-import {
-  mugState,
-  HERO_SCALE, CENTER_SCALE, HERO_POSITION, CENTER_POSITION,
-  START_ROT_Y, END_ROT_Y,
-  MOBILE_HERO_SCALE, MOBILE_CENTER_SCALE, MOBILE_HERO_POSITION, MOBILE_CENTER_POSITION,
-} from './mugConfig.js'
+import { scroll } from './mugConfig.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -46,65 +41,37 @@ export default function App() {
     }
   }, [])
 
-  // One master timeline, built once. matchMedia covers mobile + reduced-motion variants
-  // and re-runs itself on resize, so no manual refresh handling is needed.
+  // ScrollTrigger's only job is to publish a 0 -> 1 progress number. The mug and the
+  // camera are applied from it inside useFrame, which guarantees the canvas redraws and
+  // means there is no ref to race against the GLB load.
   useEffect(() => {
     const mm = gsap.matchMedia(scope)
 
-    mm.add(
-      {
-        isMobile: '(max-width: 767px)',
-        reduced: '(prefers-reduced-motion: reduce)',
-      },
-      (ctx) => {
-        const { isMobile, reduced } = ctx.conditions
-        const heroPos = isMobile ? MOBILE_HERO_POSITION : HERO_POSITION
-        const centerPos = isMobile ? MOBILE_CENTER_POSITION : CENTER_POSITION
-        const heroScale = isMobile ? MOBILE_HERO_SCALE : HERO_SCALE
-        const centerScale = isMobile ? MOBILE_CENTER_SCALE : CENTER_SCALE
+    mm.add({ reduced: '(prefers-reduced-motion: reduce)' }, (ctx) => {
+      if (ctx.conditions.reduced) {
+        // Hold the menu end-state, no scrubbing.
+        scroll.reduced = true
+        gsap.set('.menu-left .item, .menu-right .item', { x: 0, opacity: 1 })
+        return
+      }
 
-        if (reduced) {
-          // Jump straight to the end state, show everything, no scrubbing.
-          Object.assign(mugState, {
-            x: centerPos[0], y: centerPos[1], z: centerPos[2],
-            rotY: END_ROT_Y, scale: centerScale,
-          })
-          gsap.set('.menu-left .item, .menu-right .item', { x: 0, opacity: 1 })
-          return
-        }
+      scroll.reduced = false
+      const range = { trigger: '.mug-scroll', start: 'top top', end: 'bottom bottom', scrub: true }
 
-        Object.assign(mugState, {
-          x: heroPos[0], y: heroPos[1], z: heroPos[2],
-          rotY: START_ROT_Y, scale: heroScale,
-        })
+      ScrollTrigger.create({
+        ...range,
+        onUpdate: (self) => { scroll.p = self.progress },
+      })
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: '#reveal',
-            start: 'top 70%',
-            end: 'bottom bottom',
-            scrub: true,
-          },
-        })
-
-        // Phase 1 + 2 — slide right to centre, half-turn so the handle flips sides.
-        tl.to(mugState, {
-          x: centerPos[0], y: centerPos[1], z: centerPos[2],
-          rotY: END_ROT_Y,
-          scale: centerScale,
-          duration: 1,
-          ease: 'none',
-        }, 0)
-
-        // Phase 3 — names fly in around the now-centred mug.
-        tl.fromTo('.menu-left .item',
-          { x: -80, opacity: 0 },
-          { x: 0, opacity: 1, stagger: 0.12, duration: 0.5, ease: 'power2.out' }, 0.55)
-        tl.fromTo('.menu-right .item',
-          { x: 80, opacity: 0 },
-          { x: 0, opacity: 1, stagger: 0.12, duration: 0.5, ease: 'power2.out' }, 0.55)
-      },
-    )
+      // Menu names are DOM, so they still want a real scrubbed timeline.
+      const tl = gsap.timeline({ scrollTrigger: range })
+      tl.fromTo('.menu-left .item',
+        { x: -90, opacity: 0 },
+        { x: 0, opacity: 1, stagger: 0.1, duration: 0.4, ease: 'power2.out' }, 0.55)
+      tl.fromTo('.menu-right .item',
+        { x: 90, opacity: 0 },
+        { x: 0, opacity: 1, stagger: 0.1, duration: 0.4, ease: 'power2.out' }, 0.55)
+    })
 
     return () => mm.revert()
   }, [])
@@ -190,8 +157,8 @@ export default function App() {
         </div>
       </header>
 
-      {/* Reveal — the scrubbed range where the mug centres and rotates */}
-      <section id="reveal" className="relative h-[200vh]">
+      {/* Reveal — 200vh of real height; the scrub range the mug + camera ride */}
+      <section id="reveal" className="mug-scroll relative h-[200vh]">
         <div className="sticky top-0 flex h-screen items-center">
           <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-4 px-6 md:gap-8">
             <ul className="menu-left space-y-6 text-right md:space-y-10">
