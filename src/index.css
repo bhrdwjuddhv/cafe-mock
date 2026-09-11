@@ -2,17 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────── DESIGN TOKENS — tweak the whole theme here ─────────────── */
 :root {
+  --rail-maroon:  #7B2D26; /* classic coach maroon — primary */
+  --rail-yellow:  #F4B400; /* station name-board — signage accent */
+  --rail-cream:   #F3E9D2; /* chart paper — main background */
+  --rail-ink:     #1A1A1A; /* signboard text / dark UI */
+  --rail-saffron: #EF7F1A; /* IRCTC-style orange — secondary accent */
+  --rail-teal:    #245C63; /* rexine seat — cool accent band */
+  --rail-green:   #1F7A3D; /* signal "go" / veg dot */
+  --rail-rust:    #5A3A22; /* worn metal / borders */
+
+  --font-display: 'Yatra One', 'Rozha One', Georgia, serif;
+  --font-sign:    'Oswald', 'Arial Narrow', system-ui, sans-serif;
+  --font-body:    'Mukta', system-ui, sans-serif;
+
   color-scheme: only light;
 }
 
 html, body {
-  background: #3B2417;
-  color: #F5EBDD;
+  background: var(--rail-maroon);
+  color: var(--rail-cream);
 }
 
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -20,22 +34,163 @@ body {
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
-/* Warm paper grain over the whole page */
+.text-balance { text-wrap: balance; }
+
+/* Worn paper grain over the whole page */
 .grain::after {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.045;
+  opacity: 0.05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.text-balance { text-wrap: balance; }
+/* ── Station name-board ── */
+.station-board {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
+  padding: 0.45em 1.1em 0.5em;
+  background: var(--rail-yellow);
+  color: var(--rail-ink);
+  border: 2px solid var(--rail-ink);
+  border-radius: 0.5rem;
+  box-shadow: inset 0 0 0 3px var(--rail-yellow), inset 0 0 0 4px rgba(26, 26, 26, 0.55),
+    0 6px 0 -2px var(--rail-rust);
+  font-family: var(--font-sign);
+  line-height: 1.05;
+  text-align: center;
+}
+.station-board__hi { font-family: var(--font-display); font-size: 0.8em; }
+.station-board__en { font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.station-board__note {
+  font-size: 0.5em;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
 
-/* Fallback tile for menu photos that aren't on disk yet */
+/* ── Level-crossing divider ── */
+.level-crossing {
+  height: 14px;
+  background: repeating-linear-gradient(-45deg,
+    var(--rail-yellow) 0 18px, var(--rail-ink) 18px 36px);
+}
+
+/* ── Chart paper (texture if present, cream + faint ruling if not) ── */
+.chart-paper {
+  background-color: var(--rail-cream);
+  background-image:
+    url('/rail/textures/chart-paper.jpg'),
+    repeating-linear-gradient(0deg, transparent 0 31px, rgba(90, 58, 34, 0.08) 31px 32px);
+  background-size: cover, auto;
+  color: var(--rail-ink);
+}
+
+/* ── Ticket: perforated notches down both long edges ── */
+.ticket {
+  --notch: 11px;
+  background: var(--rail-cream);
+  color: var(--rail-ink);
+  -webkit-mask:
+    radial-gradient(circle var(--notch) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+          mask:
+    radial-gradient(circle var(--notch) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle var(--notch) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
+}
+.perforation { border-top: 2px dashed rgba(90, 58, 34, 0.45); }
+
+/* ── "Chai garam" marquee ── */
+.marquee { overflow: hidden; white-space: nowrap; }
+.marquee__track { display: inline-block; animation: marquee 28s linear infinite; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ── Train window ── */
+.window-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 2.5rem;
+  border: 10px solid var(--rail-rust);
+  box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.35), 0 30px 60px -30px rgba(0, 0, 0, 0.7);
+  background: linear-gradient(180deg, #f6c77a 0%, #f2a65a 38%, #c9794a 62%, #6d4a2f 100%);
+}
+.window-bar {
+  position: absolute;
+  inset-inline: 0;
+  height: 9px;
+  z-index: 3;
+  background: linear-gradient(180deg, #9a8b7a, #4b3f33);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Passing landscape: two copies of one strip, slid by -50% for a seamless loop ── */
+.landscape { position: absolute; inset-inline: 0; bottom: 0; overflow: hidden; }
+.landscape__track { display: flex; width: 200%; height: 100%; }
+.landscape__track > svg { width: 50%; height: 100%; flex: none; }
+.landscape--far  .landscape__track { animation: landscape 60s linear infinite; }
+.landscape--near .landscape__track { animation: landscape 14s linear infinite; }
+/* Scroll-scrubbed strips: GSAP owns the transform, so the looping animation must stay off */
+.landscape--scrub .landscape__track { animation: none; }
+@keyframes landscape { to { transform: translateX(-50%); } }
+
+.photo-drift { animation: drift 40s ease-in-out infinite alternate; }
+@keyframes drift { from { transform: scale(1.12) translateX(3%); } to { transform: scale(1.12) translateX(-3%); } }
+
+/* ── Semaphore: --journey (0..1) is written by a ScrollTrigger ── */
+.semaphore { --journey: 0; }
+.semaphore__arm {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  transform: rotate(calc(var(--journey) * 45deg));
+}
+.semaphore__red   { opacity: calc(1 - var(--journey)); }
+.semaphore__green { opacity: var(--journey); }
+
+.wheel-spin { animation: wheel 1.6s linear infinite; transform-origin: 50% 50%; }
+@keyframes wheel { to { transform: rotate(360deg); } }
+
+/* Fallback tile for photos that aren't on disk yet */
 .photo-fallback {
   background:
-    radial-gradient(circle at 50% 42%, rgba(200,137,75,0.35), transparent 62%),
-    linear-gradient(160deg, #6F4E37, #3B2417);
+    radial-gradient(circle at 50% 45%, rgba(239, 127, 26, 0.28), transparent 62%),
+    linear-gradient(160deg, #e9dcc0, #d8c6a2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track, .landscape__track, .photo-drift, .wheel-spin { animation: none !important; }
+}
+
+/* ── Photo slots: show an icon on the fallback tile when the image isn't on disk ── */
+.photo-slot { position: relative; }
+.photo-slot .fallback-icon { display: none; }
+.photo-slot.is-missing .fallback-icon { display: grid; }
+
+/* ── Steam off the hero kulhad ── */
+.steam { position: absolute; left: 50%; top: 14%; width: 40%; height: 45%; transform: translate(-50%, -85%); }
+.steam span {
+  position: absolute;
+  bottom: 0;
+  width: 26%;
+  height: 70%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 246, 230, 0.7), transparent);
+  filter: blur(6px);
+  opacity: 0;
+  animation: steam 4.5s ease-out infinite;
+}
+.steam span:nth-child(1) { left: 12%; }
+.steam span:nth-child(2) { left: 40%; animation-delay: 1.5s; }
+.steam span:nth-child(3) { left: 66%; animation-delay: 3s; }
+@keyframes steam {
+  0%   { transform: translateY(20%) scaleX(0.8); opacity: 0; }
+  30%  { opacity: 0.8; }
+  100% { transform: translateY(-70%) scaleX(1.4); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steam span { animation: none; opacity: 0.35; }
 }
