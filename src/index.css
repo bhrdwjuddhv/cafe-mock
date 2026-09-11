@@ -4,14 +4,18 @@
 
 /* ─────────────── DESIGN TOKENS — tweak the whole theme here ─────────────── */
 :root {
-  --rail-maroon:  #7B2D26; /* classic coach maroon — primary */
-  --rail-yellow:  #F4B400; /* station name-board — signage accent */
-  --rail-cream:   #F3E9D2; /* chart paper — main background */
-  --rail-ink:     #1A1A1A; /* signboard text / dark UI */
-  --rail-saffron: #EF7F1A; /* IRCTC-style orange — secondary accent */
-  --rail-teal:    #245C63; /* rexine seat — cool accent band */
-  --rail-green:   #1F7A3D; /* signal "go" / veg dot */
-  --rail-rust:    #5A3A22; /* worn metal / borders */
+  --rail-maroon:  #6F2620; /* deep coach maroon — primary */
+  --rail-yellow:  #F5B301; /* warm signage yellow — accent */
+  --rail-cream:   #F1E7CE; /* soft cream — main background */
+  --rail-ink:     #241A13; /* warm near-black — text (not pure black) */
+  --rail-brass:   #B08D3E; /* brass / gold — premium accent */
+  --rail-lhb-red: #D93E2E; /* modern LHB red — ONLY for an actual train element or one key CTA */
+  --rail-teal:    #245C63; /* rexine seat — cool accent */
+  --rail-green:   #1F7A3D; /* signal go / veg dot */
+
+  /* Derived from the tokens above — no need to edit. Brass fails contrast as body text on
+     cream, so secondary text uses ink blended toward cream instead (about 6:1). */
+  --rail-ink-soft: color-mix(in srgb, var(--rail-ink) 72%, var(--rail-cream));
 
   --font-display: 'Yatra One', 'Rozha One', Georgia, serif;
   --font-sign:    'Oswald', 'Arial Narrow', system-ui, sans-serif;
@@ -58,8 +62,9 @@ html.lenis, html.lenis body { height: auto; }
   color: var(--rail-ink);
   border: 2px solid var(--rail-ink);
   border-radius: 0.5rem;
-  box-shadow: inset 0 0 0 3px var(--rail-yellow), inset 0 0 0 4px rgba(26, 26, 26, 0.55),
-    0 6px 0 -2px var(--rail-rust);
+  box-shadow: inset 0 0 0 3px var(--rail-yellow),
+    inset 0 0 0 4px color-mix(in srgb, var(--rail-ink) 55%, transparent),
+    0 6px 0 -2px var(--rail-brass);
   font-family: var(--font-sign);
   line-height: 1.05;
   text-align: center;
@@ -85,7 +90,7 @@ html.lenis, html.lenis body { height: auto; }
   background-color: var(--rail-cream);
   background-image:
     url('/rail/textures/chart-paper.jpg'),
-    repeating-linear-gradient(0deg, transparent 0 31px, rgba(90, 58, 34, 0.08) 31px 32px);
+    repeating-linear-gradient(0deg, transparent 0 31px, color-mix(in srgb, var(--rail-brass) 18%, transparent) 31px 32px);
   background-size: cover, auto;
   color: var(--rail-ink);
 }
@@ -102,7 +107,7 @@ html.lenis, html.lenis body { height: auto; }
     radial-gradient(circle var(--notch) at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat,
     radial-gradient(circle var(--notch) at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat;
 }
-.perforation { border-top: 2px dashed rgba(90, 58, 34, 0.45); }
+.perforation { border-top: 2px dashed color-mix(in srgb, var(--rail-brass) 70%, transparent); }
 
 /* ── "Chai garam" marquee ── */
 .marquee { overflow: hidden; white-space: nowrap; }
@@ -114,16 +119,20 @@ html.lenis, html.lenis body { height: auto; }
   position: relative;
   overflow: hidden;
   border-radius: 2.5rem;
-  border: 10px solid var(--rail-rust);
+  border: 10px solid var(--rail-brass);
   box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.35), 0 30px 60px -30px rgba(0, 0, 0, 0.7);
-  background: linear-gradient(180deg, #f6c77a 0%, #f2a65a 38%, #c9794a 62%, #6d4a2f 100%);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--rail-yellow) 45%, var(--rail-cream)) 0%,
+    color-mix(in srgb, var(--rail-yellow) 72%, var(--rail-maroon)) 40%,
+    color-mix(in srgb, var(--rail-maroon) 60%, var(--rail-brass)) 66%,
+    color-mix(in srgb, var(--rail-ink) 70%, var(--rail-maroon)) 100%);
 }
 .window-bar {
   position: absolute;
   inset-inline: 0;
   height: 9px;
   z-index: 3;
-  background: linear-gradient(180deg, #9a8b7a, #4b3f33);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--rail-brass) 75%, white), color-mix(in srgb, var(--rail-brass) 55%, var(--rail-ink)));
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.45);
 }
 
@@ -150,18 +159,46 @@ html.lenis, html.lenis body { height: auto; }
 .semaphore__red   { opacity: calc(1 - var(--journey)); }
 .semaphore__green { opacity: var(--journey); }
 
-.wheel-spin { animation: wheel 1.6s linear infinite; transform-origin: 50% 50%; }
-@keyframes wheel { to { transform: rotate(360deg); } }
+/* ── Loader: a signal head alternating red and green (lit colours match the semaphore) ── */
+.signal-lamp {
+  display: grid;
+  gap: 10px;
+  padding: 12px 10px;
+  border-radius: 999px;
+  background: var(--rail-ink);
+  box-shadow: inset 0 0 0 3px var(--rail-brass), 0 14px 30px -12px rgba(0, 0, 0, 0.6);
+}
+.signal-lamp i {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--rail-ink) 82%, white);
+}
+.signal-lamp i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  animation: lamp 2.4s ease-in-out infinite;
+}
+.signal-lamp__red::after   { background: #E53935; box-shadow: 0 0 18px 4px rgba(229, 57, 53, 0.55); }
+.signal-lamp__green::after { background: #43D17A; box-shadow: 0 0 18px 4px rgba(67, 209, 122, 0.55); animation-delay: -1.2s; }
+@keyframes lamp { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0; } 100% { opacity: 1; } }
 
 /* Fallback tile for photos that aren't on disk yet */
 .photo-fallback {
   background:
-    radial-gradient(circle at 50% 45%, rgba(239, 127, 26, 0.28), transparent 62%),
-    linear-gradient(160deg, #e9dcc0, #d8c6a2);
+    radial-gradient(circle at 50% 45%, color-mix(in srgb, var(--rail-brass) 30%, transparent), transparent 62%),
+    linear-gradient(160deg, color-mix(in srgb, var(--rail-cream) 85%, var(--rail-brass)),
+      color-mix(in srgb, var(--rail-cream) 65%, var(--rail-brass)));
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee__track, .landscape__track, .photo-drift, .wheel-spin { animation: none !important; }
+  .marquee__track, .landscape__track, .photo-drift, .signal-lamp i::after { animation: none !important; }
+  .signal-lamp__green::after { opacity: 1; }
 }
 
 /* ── Photo slots: show an icon on the fallback tile when the image isn't on disk ── */

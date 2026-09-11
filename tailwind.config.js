@@ -11,10 +11,11 @@ export default {
           yellow: 'var(--rail-yellow)',
           cream: 'var(--rail-cream)',
           ink: 'var(--rail-ink)',
-          saffron: 'var(--rail-saffron)',
+          soft: 'var(--rail-ink-soft)',
+          brass: 'var(--rail-brass)',
+          'lhb-red': 'var(--rail-lhb-red)',
           teal: 'var(--rail-teal)',
           green: 'var(--rail-green)',
-          rust: 'var(--rail-rust)',
         },
       },
       fontFamily: {

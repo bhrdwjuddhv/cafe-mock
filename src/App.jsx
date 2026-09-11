@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import {
-  StationBoard, LevelCrossing, Semaphore, Landscape,
+  StationBoard, LevelCrossing, Semaphore, Landscape, P1Emblem, SignalLamp,
   LocoIcon, WheelIcon, SignalIcon, KettleIcon, KulhadIcon, TicketIcon, ClockIcon,
 } from './rail.jsx'
 
@@ -63,7 +63,7 @@ function VegMark({ veg }) {
 function TicketField({ label, value }) {
   return (
     <div>
-      <p className="text-[0.65rem] uppercase tracking-widest text-rail-rust">{label}</p>
+      <p className="text-[0.65rem] uppercase tracking-widest text-rail-soft">{label}</p>
       <p className="mt-0.5 font-bold">{value}</p>
     </div>
   )
@@ -146,7 +146,7 @@ export default function App() {
 
   return (
     <div ref={scope} className="grain relative">
-      {/* Loader — spinning wheel under the station board */}
+      {/* Loader — signal head clearing to green above the station board */}
       <div
         role="status"
         aria-hidden={ready}
@@ -155,7 +155,7 @@ export default function App() {
         }`}
       >
         <div className="flex flex-col items-center px-6 text-center">
-          <WheelIcon className="wheel-spin h-16 w-16 text-rail-yellow" />
+          <SignalLamp />
           <StationBoard hi="प्लेटफ़ॉर्म १" title="Platform No. 1" className="mt-6 text-2xl" />
           <p className="mt-5 font-sign text-xs uppercase tracking-[0.35em] text-rail-cream opacity-80">
             Your chai is arriving on platform 1
@@ -182,7 +182,7 @@ export default function App() {
             ))}
           </ul>
         </div>
-        <div className="marquee border-y-2 border-rail-rust bg-rail-cream py-1 text-xs font-bold tracking-[0.25em] text-rail-maroon" aria-hidden="true">
+        <div className="marquee border-y-2 border-rail-brass bg-rail-cream py-1 text-xs font-bold tracking-[0.25em] text-rail-maroon" aria-hidden="true">
           <div className="marquee__track">{MARQUEE}{MARQUEE}</div>
         </div>
       </nav>
@@ -209,7 +209,7 @@ export default function App() {
             <div className="mt-10 flex flex-wrap items-center gap-5">
               <a
                 href="#menu"
-                className="inline-flex items-center gap-3 rounded-md border-2 border-rail-ink bg-rail-yellow px-6 py-3 font-sign text-sm font-semibold uppercase tracking-[0.2em] text-rail-ink shadow-[0_5px_0_-1px_var(--rail-rust)] transition-transform hover:-translate-y-0.5"
+                className="inline-flex items-center gap-3 rounded-md border-2 border-rail-ink bg-rail-yellow px-6 py-3 font-sign text-sm font-semibold uppercase tracking-[0.2em] text-rail-ink shadow-[0_5px_0_-1px_var(--rail-brass)] transition-transform hover:-translate-y-0.5"
               >
                 <TicketIcon className="h-5 w-5" /> Board the menu
               </a>
@@ -219,7 +219,7 @@ export default function App() {
 
           <div className="relative mx-auto w-full max-w-xl pb-10">
             <div className="window-frame photo-slot aspect-[4/3.3]">
-              <img src="/rail/hero-window.jpg" alt="" onError={dropOnError} className="photo-drift absolute inset-0 h-full w-full object-cover" />
+              <img src="/rail/hero-window.png" alt="" onError={dropOnError} className="photo-drift absolute inset-0 h-full w-full object-cover" />
               {/* illustrated hills stand in until hero-window.jpg is on disk */}
               <div className="fallback-icon absolute inset-0">
                 <Landscape depth="far" className="h-[48%]" />
@@ -290,7 +290,7 @@ export default function App() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end sm:justify-between">
             <StationBoard as="h2" hi="पैंट्री कार" title="Pantry Car" note="Menu · PF 2" className="text-2xl sm:text-4xl" />
-            <div className="grid grid-cols-3 gap-x-6 font-mono text-[0.7rem] uppercase tracking-wider text-rail-rust">
+            <div className="grid grid-cols-3 gap-x-6 font-mono text-[0.7rem] uppercase tracking-wider text-rail-soft">
               <div>Train<p className="font-bold text-rail-ink">12001 Chai Exp</p></div>
               <div>Chart date<p className="font-bold text-rail-ink">{TODAY}</p></div>
               <div>Status
@@ -301,7 +301,7 @@ export default function App() {
 
           <div className="mt-12 space-y-10">
             {COACHES.map(({ id, title, hi, Icon }) => (
-              <div key={id} className="overflow-hidden rounded-lg border-2 border-rail-rust bg-rail-cream shadow-[0_18px_40px_-28px_rgba(26,26,26,0.6)]">
+              <div key={id} className="overflow-hidden rounded-lg border-2 border-rail-brass bg-rail-cream shadow-[0_18px_40px_-28px_rgba(26,26,26,0.6)]">
                 <div className="flex items-center gap-3 bg-rail-teal px-4 py-3 text-rail-cream sm:px-6">
                   <span className="rounded bg-rail-yellow px-2 py-0.5 font-sign text-lg font-bold text-rail-ink">{id}</span>
                   <h3 className="font-sign text-lg uppercase tracking-[0.15em] sm:text-xl">{title}</h3>
@@ -309,7 +309,7 @@ export default function App() {
                   <Icon className="ml-auto h-6 w-6 text-rail-yellow" />
                 </div>
 
-                <div aria-hidden="true" className="hidden grid-cols-[5rem_5.5rem_1fr_4rem_4.5rem] gap-4 border-b-2 border-dashed border-rail-rust px-6 py-2 font-mono text-[0.7rem] uppercase tracking-widest text-rail-rust md:grid">
+                <div aria-hidden="true" className="hidden grid-cols-[5rem_5.5rem_1fr_4rem_4.5rem] gap-4 border-b-2 border-dashed border-rail-brass px-6 py-2 font-mono text-[0.7rem] uppercase tracking-widest text-rail-soft md:grid">
                   <span>Berth</span><span /><span>Passenger / यात्री</span><span className="text-center">Veg</span><span className="text-right">Fare</span>
                 </div>
 
@@ -317,10 +317,10 @@ export default function App() {
                   {MENU.filter((m) => m.coach === id).map((m) => (
                     <li
                       key={m.id}
-                      className="grid grid-cols-[4.5rem_1fr_auto] items-center gap-4 border-b border-dashed border-[rgba(90,58,34,0.35)] px-4 py-4 transition-colors last:border-b-0 hover:bg-[rgba(244,180,0,0.12)] sm:px-6 md:grid-cols-[5rem_5.5rem_1fr_4rem_4.5rem]"
+                      className="grid grid-cols-[4.5rem_1fr_auto] items-center gap-4 border-b border-dashed border-[color:color-mix(in_srgb,var(--rail-brass)_45%,transparent)] px-4 py-4 transition-colors last:border-b-0 hover:bg-[color:color-mix(in_srgb,var(--rail-yellow)_14%,transparent)] sm:px-6 md:grid-cols-[5rem_5.5rem_1fr_4rem_4.5rem]"
                     >
                       <span className="hidden font-mono text-sm font-bold text-rail-maroon md:block">{berth(m)}</span>
-                      <div className="photo-slot photo-fallback aspect-square overflow-hidden rounded-md border border-rail-rust">
+                      <div className="photo-slot photo-fallback aspect-square overflow-hidden rounded-md border border-rail-brass">
                         <img src={m.img} alt={m.name} loading="lazy" onError={dropOnError} className="h-full w-full object-contain p-1.5" />
                         <span lang="hi" aria-hidden="true" className="fallback-icon absolute inset-0 place-items-center font-display text-sm text-rail-maroon">
                           {m.hi}
@@ -330,9 +330,9 @@ export default function App() {
                         <p className="font-mono text-[0.7rem] font-bold text-rail-maroon md:hidden">{berth(m)}</p>
                         <p className="flex flex-wrap items-baseline gap-x-2">
                           <span className="font-sign text-lg font-semibold uppercase tracking-wide">{m.name}</span>
-                          <span lang="hi" className="text-rail-rust">{m.hi}</span>
+                          <span lang="hi" className="text-rail-soft">{m.hi}</span>
                         </p>
-                        <p className="text-sm leading-snug text-rail-rust">{m.desc}</p>
+                        <p className="text-sm leading-snug text-rail-soft">{m.desc}</p>
                       </div>
                       <span className="hidden justify-center md:flex"><VegMark veg={m.veg} /></span>
                       <span className="flex flex-col items-end gap-1.5 md:block md:text-right">
@@ -351,8 +351,8 @@ export default function App() {
       {/* The Journey — story */}
       <section id="journey" className="bg-rail-cream py-24 text-rail-ink">
         <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 md:grid-cols-2">
-          <div className="photo-slot photo-fallback aspect-[4/5] overflow-hidden rounded-[2rem] border-[10px] border-rail-rust">
-            <img src="/rail/story-platform.jpg" alt="Chai being poured on a railway platform" loading="lazy" onError={dropOnError} className="h-full w-full object-cover" />
+          <div className="photo-slot photo-fallback aspect-[4/5] overflow-hidden rounded-[2rem] border-[10px] border-rail-brass">
+            <img src="/rail/story-platform.png" alt="A red LHB coach waiting at a platform in golden-hour light" loading="lazy" onError={dropOnError} className="h-full w-full object-cover" />
             <div className="fallback-icon absolute inset-0 place-items-center text-rail-maroon">
               <LocoIcon className="h-24 w-24 opacity-60" />
             </div>
@@ -364,7 +364,7 @@ export default function App() {
               Every long train journey in India has the same soundtrack: a vendor&rsquo;s voice rolling down
               the platform — <em>&ldquo;chai garam, chai!&rdquo;</em> — and the clink of clay cups at the window.
             </p>
-            <p className="mt-4 leading-relaxed text-rail-rust">
+            <p className="mt-4 leading-relaxed text-rail-soft">
               We built Platform No. 1 around that memory. Tea boiled strong with ginger and cardamom,
               poured into kulhads, and snacks fried the way the pantry car used to. Pull up a bench.
               The train can wait.
@@ -372,9 +372,9 @@ export default function App() {
             <ul className="mt-10 grid gap-6 sm:grid-cols-3">
               {FACTS.map(({ Icon, title, text }) => (
                 <li key={title} className="border-t-2 border-rail-maroon pt-4">
-                  <Icon className="h-7 w-7 text-rail-saffron" />
+                  <Icon className="h-7 w-7 text-rail-brass" />
                   <p className="mt-3 font-sign text-sm font-semibold uppercase tracking-wider">{title}</p>
-                  <p className="mt-1 text-sm text-rail-rust">{text}</p>
+                  <p className="mt-1 text-sm text-rail-soft">{text}</p>
                 </li>
               ))}
             </ul>
@@ -393,10 +393,10 @@ export default function App() {
           <article aria-label="Hours and address, printed as a train ticket" className="ticket mt-12 px-8 py-8 sm:px-12">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="flex items-center gap-2 text-rail-maroon">
-                <TicketIcon className="h-7 w-7" />
+                <P1Emblem className="h-9 w-9" />
                 <span className="font-sign text-lg font-bold uppercase tracking-[0.2em]">Platform No. 1</span>
               </p>
-              <span className="font-mono text-xs uppercase tracking-widest text-rail-rust">Journey ticket</span>
+              <span className="font-mono text-xs uppercase tracking-widest text-rail-soft">Journey ticket</span>
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 font-mono text-sm sm:grid-cols-4">
@@ -411,7 +411,7 @@ export default function App() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="font-sign text-3xl font-bold sm:text-4xl">SBC</p>
-                <p className="text-xs uppercase tracking-wider text-rail-rust">Bengaluru</p>
+                <p className="text-xs uppercase tracking-wider text-rail-soft">Bengaluru</p>
               </div>
               <div aria-hidden="true" className="flex flex-1 items-center gap-2 text-rail-maroon">
                 <span className="flex-1 border-t-2 border-dashed border-rail-maroon" />
@@ -420,7 +420,7 @@ export default function App() {
               </div>
               <div className="text-right">
                 <p className="font-sign text-3xl font-bold sm:text-4xl">PF-1</p>
-                <p className="text-xs uppercase tracking-wider text-rail-rust">Platform No. 1</p>
+                <p className="text-xs uppercase tracking-wider text-rail-soft">Platform No. 1</p>
               </div>
             </div>
 
@@ -428,7 +428,7 @@ export default function App() {
 
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
-                <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-rail-rust">
+                <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-rail-soft">
                   <ClockIcon className="h-4 w-4" /> Departures
                 </p>
                 <p className="mt-2 leading-relaxed">
@@ -437,7 +437,7 @@ export default function App() {
                 </p>
               </div>
               <div>
-                <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-rail-rust">
+                <p className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-rail-soft">
                   <SignalIcon className="h-4 w-4" /> Boarding point
                 </p>
                 <address className="mt-2 not-italic leading-relaxed">
@@ -452,7 +452,7 @@ export default function App() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <p className="font-sign text-xl font-bold uppercase tracking-[0.2em] text-rail-maroon">
                 🙏 Happy Journey{' '}
-                <span lang="hi" className="font-sans text-base font-medium normal-case tracking-normal text-rail-rust">· शुभ यात्रा</span>
+                <span lang="hi" className="font-sans text-base font-medium normal-case tracking-normal text-rail-soft">· शुभ यात्रा</span>
               </p>
               <ul className="flex gap-4 font-sign text-sm uppercase tracking-wider">
                 <li><a href="#find-us" className="underline-offset-4 hover:text-rail-maroon hover:underline">Instagram</a></li>

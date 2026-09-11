@@ -15,6 +15,31 @@ export function LevelCrossing() {
   return <div className="level-crossing" role="presentation" />
 }
 
+// ── Brand roundel. Deliberately NOT the Indian Railways emblem (an official mark an
+//    independent café can't use); it only borrows the ringed heritage-seal format. ──
+export function P1Emblem({ className = 'h-10 w-10' }) {
+  return (
+    <svg viewBox="0 0 48 48" className={className} role="img" aria-label="Platform No. 1">
+      <circle cx="24" cy="24" r="23" fill="var(--rail-maroon)" />
+      <circle cx="24" cy="24" r="20" fill="none" stroke="var(--rail-brass)" strokeWidth="1.6" />
+      <circle cx="24" cy="24" r="17.4" fill="none" stroke="var(--rail-brass)" strokeWidth=".7" strokeDasharray="1.2 1.6" />
+      <text x="24" y="28" textAnchor="middle" fontSize="15" fontWeight="700" fill="var(--rail-yellow)"
+        style={{ fontFamily: 'var(--font-sign)' }}>P1</text>
+      <path d="M15 32.5h18" stroke="var(--rail-brass)" strokeWidth="1.2" />
+    </svg>
+  )
+}
+
+// ── Loader signal head: red and green lamps alternate (CSS in index.css) ──
+export function SignalLamp() {
+  return (
+    <div className="signal-lamp" aria-hidden="true">
+      <i className="signal-lamp__red" />
+      <i className="signal-lamp__green" />
+    </div>
+  )
+}
+
 // ── Icons: 24px line style, colour from currentColor ──
 function Icon({ children, className = 'h-6 w-6' }) {
   return (
@@ -25,12 +50,14 @@ function Icon({ children, className = 'h-6 w-6' }) {
   )
 }
 
+// Any train on the site is today's stock: this is a WAP-7-style electric front with its
+// pantograph up — deliberately not a steam engine.
 export const LocoIcon = (p) => (
   <Icon {...p}>
-    <path d="M7 9V5.5h2.5V9" /><path d="M7.5 3.2a1.3 1.3 0 0 1 2.4-.4 1.3 1.3 0 0 1 1.9 1.2" />
-    <rect x="4.5" y="9" width="10" height="6" rx="1" /><path d="M14.5 15V6.5h5.5V15" /><path d="M13.5 6.5h7.5" />
-    <path d="M4.5 15 2 18h3" /><circle cx="8" cy="17.5" r="2" /><circle cx="16" cy="17.5" r="2" />
-    <path d="M1 21h22" />
+    <path d="M9 1.5h6M12 1.5 9.8 4.6h4.4" /><path d="M5 20V9.5L7.5 4.6h9L19 9.5V20" />
+    <rect x="7.3" y="7.2" width="3.9" height="3.2" rx=".6" /><rect x="12.8" y="7.2" width="3.9" height="3.2" rx=".6" />
+    <path d="M5 13.2h14M5 15.3h14" /><circle cx="8" cy="17.7" r=".9" /><circle cx="16" cy="17.7" r=".9" />
+    <path d="M3 20h18M2 22.5h20" />
   </Icon>
 )
 
@@ -81,7 +108,7 @@ export function Semaphore({ innerRef }) {
   return (
     <div ref={innerRef} className="semaphore pointer-events-none fixed bottom-5 right-4 z-40 w-10 sm:w-12" aria-hidden="true">
       <svg viewBox="0 0 60 120" className="h-auto w-full drop-shadow-lg">
-        <rect x="8" y="10" width="5" height="104" rx="1" fill="var(--rail-rust)" />
+        <rect x="8" y="10" width="5" height="104" rx="1" fill="var(--rail-brass)" />
         <rect x="2" y="112" width="17" height="6" rx="1" fill="var(--rail-ink)" />
         <rect x="16" y="30" width="15" height="30" rx="3.5" fill="var(--rail-ink)" />
         <circle cx="23.5" cy="38.5" r="4.6" fill="#3a1512" />
@@ -115,15 +142,15 @@ function NearTrack() {
     <svg viewBox="0 0 800 120" preserveAspectRatio="none">
       <path d="M0 26Q100 36 200 22T400 22 600 22 800 26" stroke="var(--rail-ink)" strokeWidth="1" fill="none" opacity=".55" />
       {[200, 600].map((x) => (
-        <g key={x} fill="var(--rail-rust)">
+        <g key={x} fill="var(--rail-ink)">
           <rect x={x - 2} y="14" width="4" height="92" />
           <rect x={x - 14} y="18" width="28" height="3" />
         </g>
       ))}
       {bushes.map((x, i) => (
-        <ellipse key={x} cx={x} cy="104" rx={i % 2 ? 26 : 38} ry={i % 2 ? 12 : 16} fill="#2f4a2a" />
+        <ellipse key={x} cx={x} cy="104" rx={i % 2 ? 26 : 38} ry={i % 2 ? 12 : 16} fill="var(--rail-ink)" opacity=".85" />
       ))}
-      <rect y="106" width="800" height="14" fill="var(--rail-rust)" />
+      <rect y="106" width="800" height="14" fill="var(--rail-ink)" />
     </svg>
   )
 }
